@@ -12,10 +12,8 @@ module com.example.javafx {
     requires com.almasb.fxgl.all;
 
     opens com.example.javafx to javafx.fxml;
-    opens com.example.javafx2 to javafx.fxml;
-    opens com.example.javafx3 to javafx.fxml;
+
 
     exports com.example.javafx;
-    exports com.example.javafx2;
-    exports com.example.javafx3;
+
 }
