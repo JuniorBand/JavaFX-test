@@ -1,4 +1,4 @@
-package com.example.javafx;
+package com.example.javafx2;
 
 public class Launcher {
     public static void main(String[] args) {
