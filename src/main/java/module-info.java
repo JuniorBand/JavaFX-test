@@ -11,9 +11,11 @@ module com.example.javafx {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
 
-    opens com.example.javafx to javafx.fxml;
+    opens com.app.javafx to javafx.fxml;
 
-
-    exports com.example.javafx;
+    exports com.app.javafx.application;
+    opens com.app.javafx.application to javafx.fxml;
+    exports com.app.javafx.gui;
+    opens com.app.javafx.gui to javafx.fxml;
 
 }
