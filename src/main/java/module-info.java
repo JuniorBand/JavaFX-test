@@ -11,6 +11,8 @@ module com.example.javafx {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires javafx.graphics;
+    requires static lombok;
+    requires java.sql;
 
     opens com.app.javafx to javafx.fxml;
 
