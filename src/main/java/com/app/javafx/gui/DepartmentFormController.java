@@ -1,14 +1,16 @@
 package com.app.javafx.gui;
 
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 import com.app.javafx.db.DbException;
+import com.app.javafx.gui.listeners.DataChangeListener;
 import com.app.javafx.gui.util.Alerts;
 import com.app.javafx.gui.util.Constraints;
 import com.app.javafx.gui.util.Utils;
 import com.app.javafx.model.entities.Department;
+import com.app.javafx.model.exceptions.ValidationException;
 import com.app.javafx.model.services.DepartmentService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -27,6 +29,9 @@ public class DepartmentFormController implements Initializable {
     @Setter
     private DepartmentService departmentService;
 
+
+    private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
+
     @FXML
     private TextField txtId;
 
@@ -42,6 +47,9 @@ public class DepartmentFormController implements Initializable {
     @FXML
     private Button btCancel;
 
+    public void subscribeDataChangeListener(DataChangeListener listener) {
+        dataChangeListeners.add(listener);
+    }
 
     @FXML
     public void onBtSaveAction(ActionEvent event) {
@@ -54,7 +62,10 @@ public class DepartmentFormController implements Initializable {
         try {
             department = getFormData();
             departmentService.saveOrUpdate(department);
+            notifyDataChangeListeners();
             Utils.currentStage(event).close();
+        }catch (ValidationException e) {
+            setErrorMessages(e.getErrors());
         } catch (DbException e) {
             Alerts.showAlert("Error saving object", null, e.getMessage(), Alert.AlertType.ERROR);
         }
@@ -63,8 +74,19 @@ public class DepartmentFormController implements Initializable {
     private Department getFormData() {
         Department obj = new Department();
 
+        ValidationException exception = new ValidationException("Validation error");
+
         obj.setId(Utils.tryParseInt(txtId.getText()));
+
+        if (txtName.getText() == null || txtName.getText().trim().equals("")) {
+            exception.addError("name", "Field can't be empty");
+        }
+
         obj.setName(txtName.getText());
+
+        if (exception.getErrors().size() > 0) {
+            throw exception;
+        }
 
         return obj;
     }
@@ -90,6 +112,20 @@ public class DepartmentFormController implements Initializable {
         }
         txtId.setText(String.valueOf(department.getId()));
         txtName.setText(department.getName());
+    }
+
+    private void notifyDataChangeListeners() {
+        for (DataChangeListener listener : dataChangeListeners) {
+            listener.onDataChanged();
+        }
+    }
+
+    private void setErrorMessages(Map<String, String> errors) {
+        Set<String> fields = errors.keySet();
+
+        if (fields.contains("name")) {
+            labelErrorName.setText(errors.get("name"));
+        }
     }
 
 }
