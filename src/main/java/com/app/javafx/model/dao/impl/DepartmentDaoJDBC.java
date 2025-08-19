@@ -34,7 +34,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         ResultSet rs = null;
 
         try {
-            st = conn.prepareStatement("INSERT INTO departments " +
+            st = conn.prepareStatement("INSERT INTO department " +
                     "(Name) " +
                     "VALUES " +
                     "(?)", PreparedStatement.RETURN_GENERATED_KEYS);
@@ -67,7 +67,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         PreparedStatement st = null;
 
         try {
-            st = conn.prepareStatement("UPDATE departments " +
+            st = conn.prepareStatement("UPDATE department " +
                     "SET Name = ?" +
                     "WHERE Id = ?");
 
@@ -90,7 +90,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         PreparedStatement st = null;
 
         try {
-            st = conn.prepareStatement("DELETE FROM departments " +
+            st = conn.prepareStatement("DELETE FROM department " +
                     "WHERE Id = ?");
 
             st.setInt(1, id);
@@ -113,7 +113,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
         try {
             st = conn.prepareStatement(
-                    "SELECT * FROM departments " +
+                    "SELECT * FROM department " +
                             "WHERE Id = ?");
 
             st.setInt(1, id);
@@ -143,7 +143,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
         try {
             st = conn.prepareStatement(
-                    "SELECT * FROM departments " +
+                    "SELECT * FROM department " +
                             "ORDER BY Name");
 
             rs = st.executeQuery();
@@ -173,9 +173,9 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
         try {
             st = conn.prepareStatement(
-                    "SELECT sellers.*,departments.Name as DepName " +
-                            "FROM sellers INNER JOIN departments " +
-                            "ON sellers.DepartmentId = departments.Id " +
+                    "SELECT seller.*,department.Name as DepName " +
+                            "FROM seller INNER JOIN department " +
+                            "ON seller.DepartmentId = department.Id " +
                             "WHERE DepartmentId = ? " +
                             "ORDER BY Name");
 
@@ -218,12 +218,12 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
     private Seller instantiateSeller(ResultSet rs, Department dep) throws SQLException {
         Seller sel = new Seller();
-        // Assuming Seller has a constructor that takes id, name, email, birthDate, salary
+        // Assuming Seller has a constructor that takes id, name, email, birthDate, BaseSalary
         sel.setId(rs.getInt("Id"));
         sel.setName(rs.getString("Name"));
         sel.setEmail(rs.getString("Email"));
         sel.setBirthDate(rs.getDate("BirthDate"));
-        sel.setBaseSalary(rs.getDouble("Salary"));
+        sel.setBaseSalary(rs.getDouble("BaseSalary"));
         sel.setDepartment(dep);
         return sel;
     }

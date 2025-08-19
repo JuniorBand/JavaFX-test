@@ -30,8 +30,8 @@ public class SellerDaoJDBC implements SellerDao {
         ResultSet rs = null;
 
         try {
-            st = conn.prepareStatement("INSERT INTO sellers" +
-                    "(Name, Email, BirthDate, Salary, DepartmentId)" +
+            st = conn.prepareStatement("INSERT INTO seller" +
+                    "(Name, Email, BirthDate, BaseSalary, DepartmentId)" +
                     "VALUES" +
                     "(?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -67,8 +67,8 @@ public class SellerDaoJDBC implements SellerDao {
         PreparedStatement st = null;
 
         try {
-            st = conn.prepareStatement("UPDATE sellers " +
-                    "SET Name = ?, Email = ?, BirthDate = ?, Salary = ?, DepartmentId = ? " +
+            st = conn.prepareStatement("UPDATE seller " +
+                    "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? " +
                     "WHERE Id = ?");
 
             st.setString(1, sel.getName());
@@ -94,7 +94,7 @@ public class SellerDaoJDBC implements SellerDao {
         PreparedStatement st = null;
 
         try {
-            st = conn.prepareStatement("DELETE FROM sellers " +
+            st = conn.prepareStatement("DELETE FROM seller " +
                     "WHERE Id = ?");
 
             st.setInt(1, id);
@@ -117,10 +117,10 @@ public class SellerDaoJDBC implements SellerDao {
 
         try {
             st = conn.prepareStatement(
-                    "SELECT sellers.*,departments.Name as DepName " +
-                            "FROM sellers INNER JOIN departments " +
-                            "ON sellers.DepartmentId = departments.id " +
-                            "WHERE sellers.Id = ?");
+                    "SELECT seller.*,department.Name as DepName " +
+                            "FROM seller INNER JOIN department " +
+                            "ON seller.DepartmentId = department.id " +
+                            "WHERE seller.Id = ?");
 
             st.setInt(1, id);
             rs = st.executeQuery();
@@ -154,9 +154,9 @@ public class SellerDaoJDBC implements SellerDao {
 
         try {
             st = conn.prepareStatement(
-                    "SELECT sellers.*,departments.Name as DepName " +
-                            "FROM sellers INNER JOIN departments " +
-                            "ON sellers.DepartmentId = departments.Id " +
+                    "SELECT seller.*,department.Name as DepName " +
+                            "FROM seller INNER JOIN department " +
+                            "ON seller.DepartmentId = department.Id " +
                             "ORDER BY Name");
 
             rs = st.executeQuery();
@@ -195,9 +195,9 @@ public class SellerDaoJDBC implements SellerDao {
 
         try {
             st = conn.prepareStatement(
-                    "SELECT sellers.*,departments.Name as DepName " +
-                            "FROM sellers INNER JOIN departments " +
-                            "ON sellers.DepartmentId = departments.Id " +
+                    "SELECT seller.*,department.Name as DepName " +
+                            "FROM seller INNER JOIN department " +
+                            "ON seller.DepartmentId = department.Id " +
                             "WHERE DepartmentId = ? " +
                             "ORDER BY Name");
 
@@ -240,12 +240,12 @@ public class SellerDaoJDBC implements SellerDao {
 
     private Seller instantiateSeller(ResultSet rs, Department dep) throws SQLException {
         Seller sel = new Seller();
-        // Assuming Seller has a constructor that takes id, name, email, birthDate, salary
+        // Assuming Seller has a constructor that takes id, name, email, birthDate, BaseSalary
         sel.setId(rs.getInt("Id"));
         sel.setName(rs.getString("Name"));
         sel.setEmail(rs.getString("Email"));
         sel.setBirthDate(rs.getDate("BirthDate"));
-        sel.setBaseSalary(rs.getDouble("Salary"));
+        sel.setBaseSalary(rs.getDouble("BaseSalary"));
         sel.setDepartment(dep);
         return sel;
     }
