@@ -23,10 +23,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.Setter;
 
 
 public class DepartmentListController implements Initializable {
 
+    @Setter
     private DepartmentService departmentService;
 
     @FXML
@@ -46,7 +48,8 @@ public class DepartmentListController implements Initializable {
     @FXML
     public void onBtNewAction(ActionEvent event) {
         Stage parentStage = Utils.currentStage(event);
-        createDialogForm("/com/app/javafx/DepartmentFormView.fxml", parentStage);
+        Department newDepartment = new Department();
+        createDialogForm(newDepartment,"/com/app/javafx/DepartmentFormView.fxml", parentStage);
     }
 
     @Override
@@ -72,10 +75,14 @@ public class DepartmentListController implements Initializable {
         tableViewDepartment.setItems(obsList);
     }
 
-    private void createDialogForm(String absoluteName, Stage parentStage){
+    private void createDialogForm(Department obj, String absoluteName, Stage parentStage){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
             Pane pane = loader.load();
+
+            DepartmentFormController controller = loader.getController();
+            controller.setDepartment(obj);
+            controller.updateFormData();
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Enter Department data");
@@ -90,10 +97,6 @@ public class DepartmentListController implements Initializable {
             e.printStackTrace();
         }
 
-    }
-
-    public void setDepartmentService(DepartmentService departmentService) {
-        this.departmentService = departmentService;
     }
 
 }

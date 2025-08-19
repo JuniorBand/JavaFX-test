@@ -5,13 +5,19 @@ import java.util.ResourceBundle;
 
 
 import com.app.javafx.gui.util.Constraints;
+import com.app.javafx.model.entities.Department;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import lombok.Setter;
 
 public class DepartmentFormController implements Initializable {
+
+    @FXML
+    @Setter
+    private Department department;
 
     @FXML
     private TextField txtId;
@@ -47,4 +53,13 @@ public class DepartmentFormController implements Initializable {
         Constraints.setTextFieldInteger(txtId);
         Constraints.setTextFieldMaxLength(txtName, 30);
     }
+
+    public void updateFormData(){
+        if(department == null){
+            throw new IllegalStateException("Entity was null");
+        }
+        txtId.setText(String.valueOf(department.getId()));
+        txtName.setText(department.getName());
+    }
+
 }
