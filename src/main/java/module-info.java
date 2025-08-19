@@ -10,6 +10,7 @@ module com.example.javafx {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires javafx.graphics;
 
     opens com.app.javafx to javafx.fxml;
 
@@ -17,5 +18,6 @@ module com.example.javafx {
     opens com.app.javafx.application to javafx.fxml;
     exports com.app.javafx.gui;
     opens com.app.javafx.gui to javafx.fxml;
+    opens com.app.javafx.model.entities to javafx.base;
 
 }

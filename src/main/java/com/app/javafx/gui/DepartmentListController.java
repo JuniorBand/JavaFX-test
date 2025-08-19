@@ -1,0 +1,70 @@
+package com.app.javafx.gui;
+
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+
+
+import com.app.javafx.application.Main;
+import com.app.javafx.model.entities.Department;
+import com.app.javafx.model.services.DepartmentService;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+
+
+public class DepartmentListController implements Initializable {
+
+    private DepartmentService departmentService;
+
+    @FXML
+    private TableView<Department> tableViewDepartment;
+
+    @FXML
+    private TableColumn<Department, Integer> tableColumnId;
+
+    @FXML
+    private TableColumn<Department, String> tableColumnName;
+
+    @FXML
+    private Button btNew;
+
+    private ObservableList<Department> obsList;
+
+    @FXML
+    public void onBtNewAction() {
+        System.out.println("onBtNewAction");
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        initializeNodes();
+    }
+
+    private void initializeNodes() {
+        tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tableColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        Stage stage = (Stage) Main.getMainScene().getWindow();
+        tableViewDepartment.prefHeightProperty().bind(stage.heightProperty());
+        tableViewDepartment.prefWidthProperty().bind(stage.widthProperty());
+    }
+
+    public void updateTableView() {
+        if (departmentService == null) {
+            throw new IllegalStateException("DepartmentService was null");
+        }
+        List<Department> list = departmentService.findAll();
+        obsList = FXCollections.observableArrayList(list);
+        tableViewDepartment.setItems(obsList);
+    }
+
+    public void setDepartmentService(DepartmentService departmentService) {
+        this.departmentService = departmentService;
+    }
+
+}
