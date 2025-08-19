@@ -46,7 +46,7 @@ public class DepartmentListController implements Initializable {
     @FXML
     public void onBtNewAction(ActionEvent event) {
         Stage parentStage = Utils.currentStage(event);
-        createDialogForm("/com/app/javafx/DepartmentForm.fxml", parentStage);
+        createDialogForm("/com/app/javafx/DepartmentFormView.fxml", parentStage);
     }
 
     @Override
@@ -87,6 +87,7 @@ public class DepartmentListController implements Initializable {
 
         } catch (IOException e) {
             Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
         }
 
     }
