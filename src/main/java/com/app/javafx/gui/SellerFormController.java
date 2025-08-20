@@ -5,13 +5,18 @@ import com.app.javafx.gui.listeners.DataChangeListener;
 import com.app.javafx.gui.util.Alerts;
 import com.app.javafx.gui.util.Constraints;
 import com.app.javafx.gui.util.Utils;
+import com.app.javafx.model.entities.Department;
 import com.app.javafx.model.entities.Seller;
 import com.app.javafx.model.exceptions.ValidationException;
+import com.app.javafx.model.services.DepartmentService;
 import com.app.javafx.model.services.SellerService;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.util.Callback;
 import lombok.Setter;
 
 import java.net.URL;
@@ -24,9 +29,9 @@ public class SellerFormController implements Initializable {
     @Setter
     private Seller seller;
 
-    @Setter
     private SellerService sellerService;
 
+    private DepartmentService departmentService;
 
     private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 
@@ -46,6 +51,9 @@ public class SellerFormController implements Initializable {
     private TextField txtBaseSalary;
 
     @FXML
+    private ComboBox<Department> comboBoxDepartment;
+
+    @FXML
     private Label labelErrorName;
 
     @FXML
@@ -62,6 +70,8 @@ public class SellerFormController implements Initializable {
 
     @FXML
     private Button btCancel;
+
+    private ObservableList<Department> obsList;
 
     public void subscribeDataChangeListener(DataChangeListener listener) {
         dataChangeListeners.add(listener);
@@ -123,6 +133,7 @@ public class SellerFormController implements Initializable {
         Constraints.setTextFieldDouble(txtBaseSalary);
         Constraints.setTextFieldMaxLength(txtEmail, 60);
         Utils.formatDatePicker(dpBirthDate, "dd/MM/yyyy");
+        initializeComboBoxDepartment();
     }
 
     public void updateFormData(){
@@ -132,10 +143,26 @@ public class SellerFormController implements Initializable {
         txtId.setText(String.valueOf(seller.getId()));
         txtName.setText(seller.getName());
         txtEmail.setText(seller.getEmail());
+        txtBaseSalary.setText(String.format("%.2f", seller.getBaseSalary()));
+
         if (seller.getBirthDate() != null) {
             dpBirthDate.setValue(LocalDate.ofInstant(seller.getBirthDate().toInstant(), ZoneId.systemDefault()));
         }
-        txtBaseSalary.setText(String.format("%.2f", seller.getBaseSalary()));
+
+        if (seller.getDepartment() == null) {
+            comboBoxDepartment.getSelectionModel().selectFirst();
+        } else {
+            comboBoxDepartment.setValue(seller.getDepartment());
+        }
+    }
+
+    public void loadAssociatedObjects() {
+        if (departmentService == null) {
+            throw new IllegalStateException("DepartmentService was null");
+        }
+        List<Department> list = departmentService.findAll();
+        obsList = FXCollections.observableArrayList(list);
+        comboBoxDepartment.setItems(obsList);
     }
 
     private void notifyDataChangeListeners() {
@@ -143,6 +170,19 @@ public class SellerFormController implements Initializable {
             listener.onDataChanged();
         }
     }
+
+    private void initializeComboBoxDepartment() {
+        Callback<ListView<Department>, ListCell<Department>> factory = lv -> new ListCell<Department>() {
+            @Override
+            protected void updateItem(Department item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? "" : item.getName());
+            }
+        };
+        comboBoxDepartment.setCellFactory(factory);
+        comboBoxDepartment.setButtonCell(factory.call(null));
+    }
+
 
     private void setErrorMessages(Map<String, String> errors) {
         Set<String> fields = errors.keySet();
@@ -152,4 +192,8 @@ public class SellerFormController implements Initializable {
         }
     }
 
+    public void setServices(SellerService sellerService, DepartmentService departmentService) {
+        this.sellerService = sellerService;
+        this.departmentService = departmentService;
+    }
 }
