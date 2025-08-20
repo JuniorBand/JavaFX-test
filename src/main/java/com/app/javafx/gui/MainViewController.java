@@ -2,7 +2,6 @@ package com.app.javafx.gui;
 
 import com.app.javafx.application.Main;
 import com.app.javafx.gui.util.Alerts;
-import com.app.javafx.model.entities.Department;
 import com.app.javafx.model.services.DepartmentService;
 import com.app.javafx.model.services.SellerService;
 import javafx.fxml.FXML;
