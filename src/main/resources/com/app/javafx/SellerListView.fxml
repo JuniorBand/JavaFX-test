@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="388.0" prefWidth="440.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.javafx.gui.SellerListController">
+    <children>
+        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="47.0" prefWidth="445.0" text="Department Registration" textAlignment="CENTER">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+            <padding>
+                <Insets bottom="10.0" top="10.0" />
+            </padding>
+        </Label>
+        <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="200.0">
+            <items>
+                <Button fx:id="btNew" mnemonicParsing="false" onAction="#onBtNewAction" text="New" />
+            </items>
+        </ToolBar>
+        <TableView fx:id="tableViewSeller" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
+            <columns>
+                <TableColumn fx:id="tableColumnId" prefWidth="75.0" text="Id" />
+                <TableColumn fx:id="tableColumnName" prefWidth="75.0" text="Name" />
+                <TableColumn fx:id="tableColumnEdit" prefWidth="75.0" />
+                <TableColumn fx:id="tableColumnRemove" prefWidth="75.0" />
+            </columns>
+        </TableView>
+    </children>
+</VBox>
